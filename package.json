@@ -1,0 +1,18 @@
+{
+  "name": "old_book_shopping",
+  "version": "1.0.0",
+  "description": "this web app make an online \u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[Ds\u001b[C\u001b[D \u001b[\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b a platform for the users who want to buy diff\u001b[C\u001b[C\u001b[C\u001b[\u001b[C\u001b[\u001b[\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001bold books from different user or for the users who want to sell their old books ",
+  "main": "shop.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Abhinav Kumar",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-promise-router": "^4.0.1",
+    "joi": "^17.1.1",
+    "morgan": "^1.10.0"
+  }
+}
