@@ -11,5 +11,13 @@ router.route('/signup')
 router.route('/signin')
     .post(UsersController.signIn);
 
+router.route('/home')
+    .get(UsersController.home);
+
+router.route('/profile')
+    .get(UsersController.profile);
+
+router.route('/')
+    .get(UsersController.root);
 
 module.exports = router;
