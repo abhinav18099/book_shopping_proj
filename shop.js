@@ -5,11 +5,26 @@ const mongoose = require('mongoose');
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const credentials = require("./secrets/credentials");
+const path = require('path');
+const handlebars = require('express-handlebars').create({
+    defaultLayout:'main',
+});
 
+// database connection manager
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://localhost/customer");
 
+// app building
 const app = express();
+
+//static files setup
+app.use(express.static(__dirname + '/public'));
+
+
+// view engine setup
+app.engine('handlebars',handlebars.engine);
+app.set('view engine','handlebars');
+
 
 const TWO_HOURS = 1000 * 60 * 660 * 2;
 
@@ -35,19 +50,22 @@ app.use(session({
 }));
 
 
-const redirectUser = (req,res,next) => {
-    if(!req.session.email) {
-        res.redirect('/users/signin')
-    }else{
-        next();
-    }
-}
-
 //Routes
+
 app.use('/users',require('./routes/users'));
 
+//404 error handler
+app.use(function(req, res, next){
+	res.status(404);
+	res.render('404');
+});
 
-
+// 500 error handler (middleware)
+app.use(function(err, req, res, next){
+	console.error(err.stack);
+	res.status(500);
+	res.render('500');
+});
 
 //Start the server
 

@@ -5,17 +5,39 @@ const { validatebody, schemas} = require('../validation/backend_val');
 
 const UsersController = require("../controllers/users");
 
+const redirectUser = (req,res,next) => {
+    if(!req.session.email) {
+        res.json("unauthorized");
+    }else{
+        next();
+    }
+}
+
+const redirectBase = (req,res,next) => {
+    if(req.session.email) {
+        res.json("authorized");
+    }else{
+        next();
+    }
+}
+
 router.route('/signup')
-    .post(validatebody(schemas.signUpSchema),UsersController.signUp);
+    .get(UsersController.register);
 
 router.route('/signin')
-    .post(UsersController.signIn);
+    .get(UsersController.login);
+
+router.route('/signup')
+    .post(validatebody(schemas.signUpSchema),redirectBase,UsersController.signUp);
+
+router.route('/signin')
+    .post(validatebody(schemas.signInSchema),redirectBase,UsersController.signIn);
 
 router.route('/home')
-    .get(UsersController.home);
+    .get(redirectUser,UsersController.home);
 
 router.route('/profile')
-    .get(UsersController.profile);
+    .get(redirectUser,UsersController.profile);
 
 router.route('/')
     .get(UsersController.root);
