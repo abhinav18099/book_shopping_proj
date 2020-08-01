@@ -7,7 +7,7 @@ const UsersController = require("../controllers/users");
 
 const redirectUser = (req,res,next) => {
     if(!req.session.email) {
-        res.json("unauthorized");
+        res.redirect("/users/signin");
     }else{
         next();
     }
@@ -15,23 +15,23 @@ const redirectUser = (req,res,next) => {
 
 const redirectBase = (req,res,next) => {
     if(req.session.email) {
-        res.json("authorized");
+        res.redirect('/users/home');
     }else{
         next();
     }
 }
 
 router.route('/signup')
-    .get(UsersController.register);
+    .get(redirectBase,UsersController.register);
 
 router.route('/signin')
-    .get(UsersController.login);
+    .get(redirectBase,UsersController.login);
 
 router.route('/signup')
-    .post(validatebody(schemas.signUpSchema),redirectBase,UsersController.signUp);
+    .post(redirectBase,validatebody(schemas.signUpSchema),redirectBase,UsersController.signUp);
 
 router.route('/signin')
-    .post(validatebody(schemas.signInSchema),redirectBase,UsersController.signIn);
+    .post(redirectBase,validatebody(schemas.signInSchema),redirectBase,UsersController.signIn);
 
 router.route('/home')
     .get(redirectUser,UsersController.home);
@@ -41,5 +41,8 @@ router.route('/profile')
 
 router.route('/')
     .get(UsersController.root);
+
+router.route('/logout')
+    .post(redirectUser,UsersController.logout);
 
 module.exports = router;

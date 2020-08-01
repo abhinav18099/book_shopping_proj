@@ -36,6 +36,9 @@ const {
 const IN_PROD = NODE_ENV === 'production';
 // Middlewares
 app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({
+    extended:true
+}));
 app.use(bodyParser.json());
 app.use(cookieParser(credentials.cookieSecret));
 app.use(session({

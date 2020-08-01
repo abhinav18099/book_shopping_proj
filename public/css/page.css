@@ -1,0 +1,12 @@
+.header{
+    text-align: center;
+}
+
+
+.body-container{
+    height:100%;
+    width:100%;
+    background-image:linear-gradient(45deg,#AC2832,#000000,#DFD297,#FFFFFF);
+    background-position: center;
+    position: absolute;
+}

@@ -1,5 +1,21 @@
 <h1>Welcome to the home page </h1>
 
+
+<nav class="navbar navbar-inverse">
+    {{#if email}}
+        <ul class="nav navbar-nav">
+            <li><a href="/users/home">HOME</a></li>
+            <li><a href="/users/profile">PROFILE</a></li>
+        </ul>
+        <form method="POST" action="/users/logout"><button class="btn btn-danger navbar-btn">LOGOUT</button></form>
+    {{else}}
+    <ul class="nav navbar-nav">
+      <li><a href="/users/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+      <li><a href="/users/signin"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+    </ul>
+    {{/if}}
+</nav>
+
 <h3>your username is : </h3>
 {{username}}
 <br>

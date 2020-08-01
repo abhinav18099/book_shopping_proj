@@ -22,7 +22,7 @@ module.exports = {
         });
         await newcustomer.save();
         req.session.email  = newcustomer.email;
-        res.json(req.sessionID);
+        res.redirect('/users/home');
     },
 
     signIn: async (req,res,next) => {
@@ -34,7 +34,7 @@ module.exports = {
 
         if(check){
             req.session.email = check.email;
-            return res.json(req.sessionID);
+            return res.redirect('/users/home');
         }
         res.status(403).json("error : email or password is wrong.");
     },
@@ -48,7 +48,8 @@ module.exports = {
     },
 
     root: async(req,res) => {
-        res.render('root');
+        const email = req.session.email;
+        res.render('root',{email});
     },
 
     profile: async(req,res) => {
@@ -61,5 +62,15 @@ module.exports = {
 
     register: async(req,res) => {
         res.render('register',{layout:'sign_in_up'});
+    },
+
+    logout: async(req,res) => {
+        req.session.destroy(err =>{
+            if(err){
+                res.redirect('users/home');
+            }
+            res.clearCookie();
+            res.redirect('/users/signin');
+        });
     },
 };
