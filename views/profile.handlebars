@@ -1,0 +1,68 @@
+<h1>Profile</h1>
+
+<nav class="navbar navbar-inverse">
+    {{#if email}}
+        <ul class="nav navbar-nav">
+            <li><a href="/users/home">HOME</a></li>
+            <li><a href="/users/profile">PROFILE</a></li>
+        </ul>
+        <form method="POST" action="/users/logout"><button class="btn btn-danger navbar-btn">LOGOUT</button></form>
+    {{else}}
+    <ul class="nav navbar-nav">
+      <li><a href="/users/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+      <li><a href="/users/signin"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+    </ul>
+    {{/if}}
+</nav>
+
+<div class="personal-info">
+    <div class="table-responsive">          
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>USERNAME</td>
+                    <td>{{username}}</td>
+                </tr>
+                <tr>
+                    <td>EMAIL:</td>
+                    <td>{{email}}</td>
+                </tr>
+                <tr>
+                    <td>PHONE</td>
+                    <td>{{phone}}</td>
+                </tr>
+                <tr>
+                    <td>ADDRESS</td>
+                    <td>{{address}}</td>
+                </tr>
+                <tr>
+                    <td>ZIPCODE</td>
+                    <td>{{zipcode}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {{#if book_sell}}
+    <div class="panel panel-primary">
+      <div class="panel-heading">BOOKS SELLED</div>
+    </div>
+    <ul class="list-group">
+    {{#each book_sell}}
+        <li class="list-group-item">{{this}}</li>
+    {{/each}}
+    </ul>
+    {{/if}}
+
+    {{#if book_buy}}
+    <div class="panel panel-primary">
+      <div class="panel-heading">BOOKS BOUGHT</div>
+    </div>
+    <ul class="list-group">
+    {{#each book_buy}}
+        <li class="list-group-item">{{this}}</li>
+    {{/each}}
+    </ul>
+    {{/if}}
+    <a href="/users/update">EDIT-profile</a>
+
+</div>

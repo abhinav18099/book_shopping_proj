@@ -21,6 +21,9 @@ const redirectBase = (req,res,next) => {
     }
 }
 
+router.route('/')
+    .get(UsersController.root);
+
 router.route('/signup')
     .get(redirectBase,UsersController.register);
 
@@ -36,11 +39,14 @@ router.route('/signin')
 router.route('/home')
     .get(redirectUser,UsersController.home);
 
-router.route('/profile')
-    .get(redirectUser,UsersController.profile);
+router.route('/update')
+    .get(redirectUser,UsersController.update);
 
-router.route('/')
-    .get(UsersController.root);
+router.route('/profile')
+    .post(redirectUser,validatebody(schemas.PersonSchema),UsersController.profile);
+
+router.route('/profile')
+    .get(redirectUser,UsersController.profileGet);
 
 router.route('/logout')
     .post(redirectUser,UsersController.logout);

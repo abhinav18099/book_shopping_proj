@@ -21,11 +21,37 @@ const customerSchema = new Schema({
 });
 
 
+personSchema = new Schema({
+    username:{
+        type:String,
+        unique:true,
+    },
+    email:{
+        type:String,
+    },
+    phone:{
+        type:Number,
+    },
+    address:{
+        type:[String],
+    },
+    zipcode: {
+        type: String,
+    },
+    book_sell:{
+        type : [String]
+    },
+    book_buy:{
+        type : [String]
+    },
+});
+
+
 // customer model here
 const customerModel = mongoose.model('customer',customerSchema);
-
+const personModel = new mongoose.model('person',personSchema);
 
 // exporting the model
 
-module.exports  = customerModel;
+module.exports  = {customerModel , personModel};
 
