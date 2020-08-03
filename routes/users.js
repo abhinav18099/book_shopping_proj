@@ -42,6 +42,9 @@ router.route('/home')
 router.route('/update')
     .get(redirectUser,UsersController.update);
 
+router.route('/more-info/:id')
+    .get(UsersController.Info);
+
 router.route('/profile')
     .post(redirectUser,validatebody(schemas.PersonSchema),UsersController.profile);
 
@@ -50,5 +53,14 @@ router.route('/profile')
 
 router.route('/logout')
     .post(redirectUser,UsersController.logout);
+
+//adding routes for product selling
+router.route('/sell')
+    .get(redirectUser,UsersController.sellGet);
+
+
+router.route('/sell')
+    .post(redirectUser,validatebody(schemas.BookSchema),UsersController.sellPost);
+
 
 module.exports = router;

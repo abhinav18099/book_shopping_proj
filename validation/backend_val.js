@@ -33,5 +33,15 @@ module.exports = {
             address: joi.string(),
             zipcode: joi.string(),
         }),
+
+        BookSchema: joi.object().keys({
+            name: joi.string().required(),
+            email: joi.string().required(),
+            author: joi.string().required(),
+            ISBN: joi.string().required(),
+            actualPrice: joi.number().required(),
+            SellingPrice: joi.number().required(),
+            bookDesc: joi.string().required(),
+        }),
     }
 }

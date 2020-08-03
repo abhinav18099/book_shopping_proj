@@ -9,16 +9,16 @@ const path = require('path');
 const handlebars = require('express-handlebars').create({
     defaultLayout:'main',
 });
-
+const bookModel = require('./table_model/customers').bookModel;
 // database connection manager
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost/customer");
+mongoose.connect("mongodb://localhost/customer",{useCreateIndex: true,useUnifiedTopology: true,useNewUrlParser: true});
 
 // app building
 const app = express();
 
 //static files setup
-app.use(express.static(__dirname + '/public'));
+app.use(express.static( __dirname +'/public'));
 
 
 // view engine setup
@@ -54,6 +54,32 @@ app.use(session({
 
 
 //Routes
+
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
+
+app.get('/',async function(req,res){
+        if(req.query.search){
+            const regex = new RegExp('\\b'+escapeRegex(req.query.search), 'gi');
+            bookModel.find({"name" : regex},function(err,result){
+                if(err){
+                    console.log(err);
+                }else{
+                    console.log(regex);
+                    res.render('entry',{result});
+                }
+            }).lean();
+        }else{
+            bookModel.find({},function(err,result){
+                if(err){
+                    console.log(err);
+                }else{
+                    res.render('entry',{result});
+                }
+            }).lean();
+        }
+});
 
 app.use('/users',require('./routes/users'));
 

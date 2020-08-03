@@ -1,0 +1,36 @@
+<h1>form for book database</h1>
+<div class="container">
+    <form method="POST" action="/users/sell">
+        <div class="form-group">
+            <label for="name">Name of Book:</label>
+            <input type="text" class="form-control" id="name" placeholder="entet book name .. " name="name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" placeholder="{{email}}" name="email" value="{{email}}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="author">Author of book:</label>
+            <input type="text" class="form-control" id="author" placeholder="Enter author name ..." name="author" required>
+        </div>
+        <div class="form-group">
+            <label for="ISBN">ISBN</label>
+            <input type="text" class="form-control" id="ISBN" placeholder="Enter ISBN" name="ISBN" required>
+        </div>
+        <div class="form-group">
+            <label for="actualPrice">actual price of book:</label>
+            <input type="number" class="form-control" id="actualPrice" placeholder="Enter actual price" name="actualPrice" step="0.01" min="1" required>
+        </div>
+        <div class="form-group">
+            <label for="SellingPrice">selling price of price:</label>
+            <input type="number" class="form-control" id="SellingPrice" placeholder="Enter selling price" name="SellingPrice" step="0.01" min="1" required>
+        </div>
+        <div class="form-group">
+            <label for="bookDesc">Description of book:</label>
+            <textarea class="form-control" id="bookDesc" name="bookDesc" aria-label="With textarea" placeholder="Enter description about book" required></textarea>
+        </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+</div>

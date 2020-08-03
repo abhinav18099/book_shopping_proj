@@ -1,7 +1,14 @@
 const customerModel = require('../table_model/customers').customerModel;
 const personModel = require('../table_model/customers').personModel;
+const bookModel = require('../table_model/customers').bookModel;
 const credentials = require("../secrets/credentials");
 const handlebars = require('express-handlebars');
+
+
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
+
 
 module.exports = {
     
@@ -56,10 +63,25 @@ module.exports = {
 
     home: async(req,res) => {
         const email = req.session.email;
-        const check = await customerModel.findOne({email : email});
-        const context = {username : check.username,
-                         email : check.email};
-        res.render('home',context);
+        if(req.query.search){
+            const regex = new RegExp('\\b'+escapeRegex(req.query.search), 'gi');
+            bookModel.find({"name" : regex},function(err,result){
+                if(err){
+                    console.log(err);
+                }else{
+                    console.log({result,email});
+                    res.render('home',{result,email});
+                }
+            }).lean();
+        }else{
+            bookModel.find({},function(err,result){
+                if(err){
+                    console.log(err);
+                }else{
+                    res.render('home',{result,email});
+                }
+            }).lean();
+        }
     },
 
     // '/' get route handler
@@ -125,4 +147,42 @@ module.exports = {
             res.redirect('/users/signin');
         });
     },
+
+    //route for showing desc with id
+    Info: async(req,res) => {
+        const id = req.params.id;
+        bookModel.find({"_id" : id},function(err,result){
+            if(err){
+                console.log(err);
+            }else{
+                var context = {name : result[0].name,
+                                author : result[0].author,
+                                actualPrice : result[0].actualPrice,
+                                SellingPrice : result[0].SellingPrice,
+                                bookDesc : result[0].bookDesc};
+                console.log(context);
+                res.render('info',context);
+            }
+        }).lean();
+    },
+
+    //routes addition for selling products
+    sellGet: async(req,res) => {
+        var context = {email : req.session.email};
+        res.render('sell',context);
+    },
+
+    sellPost: async(req,res) => {
+        const email = req.session.email;
+        if(email == req.value.body.email)
+        {
+            const newbook = new bookModel(req.value.body);
+            await newbook.save();
+            res.redirect('/users/home');
+        }else{
+            res.redirect('/users/login');
+        }
+    },
+
+
 };

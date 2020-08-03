@@ -1,11 +1,19 @@
-<h1>Welcome to the home page </h1>
-
+<div class="jumbotron">
+    <h2>Welcome to the home page</h2>
+    <form class="form-inline" method="GET" action="/users/home">
+        <div class="form-group">
+            <input class="form-control" type="text" name="search" placeholder="Search Books..." aria-label="Search">
+            <input class="btn btn-default" type="submit" value="Search">
+        </div>
+    </form>
+</div>
 
 <nav class="navbar navbar-inverse">
     {{#if email}}
         <ul class="nav navbar-nav">
             <li><a href="/users/home">HOME</a></li>
             <li><a href="/users/profile">PROFILE</a></li>
+             <li><a href="/users/sell">SELL BOOKS</a></li>
         </ul>
         <form method="POST" action="/users/logout"><button class="btn btn-danger navbar-btn">LOGOUT</button></form>
     {{else}}
@@ -16,7 +24,14 @@
     {{/if}}
 </nav>
 
-<h3>your username is : </h3>
-{{username}}
-<br>
-<h3>your email is : </h3>{{email}}
+{{#result}}
+<div class="col-sm-4 col-xs-12">
+    <div class="card">
+    <img src="/img/logo_site.jpg" alt="Denim Jeans" style="width:100%">
+    <h3>{{name}}</h3>
+    <p class="price">Rupee : {{SellingPrice}}</p>
+    <p><a href='/users/more-info/{{_id}}'>MORE INFO</a></p>
+    <p><button>Add to Cart</button></p>
+    </div> 
+</div>
+{{/result}}
