@@ -49,26 +49,59 @@ personSchema = new Schema({
 bookSchema = new Schema({
     name:{
         type:String,
+        required : true,
     },
     author:{
         type:String,
+        required : true,
     },
     actualPrice:{
         type:Number,
     },
     SellingPrice:{
         type:Number,
+        required : true,
     },
     ISBN:{
         type: String,
+        required : true,
     },
     email:{
         type:String,
+        required : true,
     },
     bookDesc:{
         type:String,
+        required : true,
     }
 });
+
+paymentSchema = new Schema({
+    payer_email : {
+        type : String,
+        required : true,
+    },
+    cart : {
+        type : Object,
+        required : true,
+    },
+    address : {
+        type : Object,
+        required : true,
+    },
+    name : { type : String, required : true},
+    payment_id : {
+        type : String,
+        required : true,
+    },
+    seller_email : {
+        type : Array,
+        required : true,
+    }
+});
+
+
+
 
 function getPrice(num){
     return (num/100).toFixed(2);
@@ -81,8 +114,9 @@ function setPrice(num){
 // customer model here
 const customerModel = mongoose.model('customer',customerSchema);
 const personModel = new mongoose.model('person',personSchema);
-const bookModel = new mongoose.model('book',bookSchema)
+const bookModel = new mongoose.model('book',bookSchema);
+const paymentModel = new mongoose.model('payment',paymentSchema)
 // exporting the model
 
-module.exports  = {customerModel , personModel, bookModel};
+module.exports  = {customerModel , personModel, bookModel, paymentModel};
 
