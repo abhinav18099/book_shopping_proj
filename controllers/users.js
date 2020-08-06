@@ -3,6 +3,15 @@ const personModel = require('../table_model/customers').personModel;
 const bookModel = require('../table_model/customers').bookModel;
 const credentials = require("../secrets/credentials");
 const handlebars = require('express-handlebars');
+const Cart = require('../table_model/cart');
+const paypal = require('paypal-rest-sdk');
+const url = require('url');
+
+paypal.configure({
+    'mode': 'sandbox', //sandbox or live
+    'client_id': credentials.payment.clientID,
+    'client_secret': credentials.payment.clientSecret,
+});
 
 
 function escapeRegex(text) {
@@ -159,8 +168,8 @@ module.exports = {
                                 author : result[0].author,
                                 actualPrice : result[0].actualPrice,
                                 SellingPrice : result[0].SellingPrice,
-                                bookDesc : result[0].bookDesc};
-                console.log(context);
+                                bookDesc : result[0].bookDesc,
+                                _id : result[0]._id};
                 res.render('info',context);
             }
         }).lean();
@@ -184,5 +193,141 @@ module.exports = {
         }
     },
 
+    //cart addition and checkout routes
+    addToCart: async(req,res) => {
+        var bookId = req.params.id;
+        var cart = new Cart(req.session.cart ? req.session.cart : {});
 
+        bookModel.findOne({"_id" : bookId}, function(err,book){
+            if(err){
+                res.redirect('/users/home');
+            }
+            cart.add(book, book.id);
+            req.session.cart = cart;
+            res.redirect('/users/home');
+        });
+    },
+
+    ShopCart: async(req,res) => {
+        const message = req.query.message;
+        const type = req.query.type;
+        var arr = [];
+        if(message && type)
+            arr.push({message : message,type : type});
+        if(!req.session.cart){
+            return res.render('shopping-cart',{books : null,expressFlash : arr});
+        }
+        var cart = new Cart(req.session.cart);
+        res.render('shopping-cart',{books : cart.generateArray(),totalQty : cart.totalQty,totalPrice : cart.totalPrice,expressFlash : arr});
+    },
+
+    removeProduct : async(req,res,next) => {
+        var Id = req.params.id;
+        var cart = new Cart(req.session.cart ? req.session.cart : {});
+        
+        cart.removeItem(Id);
+        req.session.cart = cart;
+        res.redirect('/users/shopping-cart');
+    },
+
+    reduceProduct : async(req,res,next) => {
+        var Id = req.params.id;
+        var cart = new Cart(req.session.cart ? req.session.cart : {});
+        
+        cart.reduceItem(Id);
+        req.session.cart = cart;
+        res.redirect('/users/shopping-cart');
+    },
+
+
+
+    pay : async(req,res,next) => {
+        var cart = new Cart(req.session.cart);
+        /*var items = [];
+        var c = 1;
+        for(var id in cart.items){
+            var obj = { name : cart.items[id].item.name,
+                sku : c,
+                price : cart.items[id].price,s
+                currency : 'INR',
+                quantity : cart.items[id].qty}            
+        }*/
+        var create_payment_json = {
+            "intent": "sale",
+            "payer": {
+                "payment_method": "paypal"
+            },
+            "redirect_urls": {
+                "return_url": "http://localhost:3000/users/success",
+                "cancel_url": "http://localhost:3000/users/cancel"
+            },
+            "transactions": [{
+                /*"item_list": {
+                    "items": [{
+                        "name": "concepts of physics",
+                        "sku": "001",
+                        "price": "250",
+                        "currency": "INR",
+                        "quantity": 1
+                    }]
+                },*/
+                "amount": {
+                    "currency": "INR",
+                    "total": cart.totalPrice.toString(),
+                },
+                "description": "HCV book buy portal"
+            }]
+        };
+    
+        paypal.payment.create(create_payment_json, function (error, payment) {
+            if (error) {
+                throw error;
+            } else {
+               for(let i=0;i <payment.links.length;i++)
+               {
+                   if(payment.links[i].rel === "approval_url")
+                        res.redirect(payment.links[i].href);
+               }
+            }
+        });
+    },
+
+    success: async(req,res,next) => {
+        var paymentId = req.query.paymentId;
+        var payerId = { payer_id: req.query.PayerID };
+        
+        paypal.payment.execute(paymentId, payerId, function(error, payment){
+            if(error){
+                console.error(JSON.stringify(error));
+                return res.redirect(url.format({
+                    pathname:'/users/shopping-cart',
+                    query:{
+                        type : 'error',
+                        message : error.message,
+                    }
+                }));
+            } else {
+                if (payment.state == 'approved'){
+                    console.log('payment completed successfully');
+                    req.session.cart = null;
+                    return res.redirect(url.format({
+                        pathname:'/users/shopping-cart',
+                        query:{
+                            type : 'success',
+                            message : 'Successfully bought product !',
+                        }
+                    }));
+                } else {
+                    console.log('payment not successful');
+                    res.redirect(url.format({
+                        pathname:'/users/shopping-cart',
+                        query:{
+                            type : 'error',
+                            message : 'payment not successful',
+                        }
+                    }));
+                }
+            }
+            });
+    },
 };

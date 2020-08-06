@@ -55,13 +55,9 @@ bookSchema = new Schema({
     },
     actualPrice:{
         type:Number,
-        get: getPrice,
-        set : setPrice,
     },
     SellingPrice:{
         type:Number,
-        get: getPrice,
-        set : setPrice,
     },
     ISBN:{
         type: String,

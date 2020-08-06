@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const credentials = require("./secrets/credentials");
 const path = require('path');
+const flash = require('express-flash');
 const handlebars = require('express-handlebars').create({
     defaultLayout:'main',
 });
@@ -47,13 +48,26 @@ app.use(session({
     secret:credentials.cookieSecret,
     cookie:{
         maxAge : SESS_LIFE,
-        sameSite: true,
+        sameSite: false,
         secure: IN_PROD,
     }
 }));
 
+app.use(flash());
 
-//Routes
+
+
+app.use(function(req,res,next){
+    res.locals.session = req.session;
+    next();
+});
+
+app.use(function(req, res, next){
+    // if there's a flash message in the session request, make it available in the response, then delete it
+    res.locals.sessionFlash = req.session.sessionFlash;
+    delete req.session.sessionFlash;
+    next();
+});
 
 function escapeRegex(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");

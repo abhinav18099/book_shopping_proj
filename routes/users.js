@@ -62,5 +62,22 @@ router.route('/sell')
 router.route('/sell')
     .post(redirectUser,validatebody(schemas.BookSchema),UsersController.sellPost);
 
+router.route('/add-to-cart/:id')
+    .get(redirectUser,UsersController.addToCart)
+
+router.route('/shopping-cart')
+    .get(redirectUser,UsersController.ShopCart)
+
+router.route('/pay')
+    .post(redirectUser,UsersController.pay);
+
+router.route('/success')
+    .get(redirectUser,UsersController.success);
+    
+router.route('/remove/:id')
+    .get(redirectUser,UsersController.removeProduct);
+
+router.route('/reduce/:id')
+    .get(redirectUser,UsersController.reduceProduct);
 
 module.exports = router;

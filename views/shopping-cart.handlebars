@@ -1,0 +1,88 @@
+{{#if books}}
+    <div class="row">
+    <div class="col-sm-12 col-md-10 col-md-offset-1">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th class="text-center">Total</th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each books}}
+                <tr>
+                    <td class="col-sm-8 col-md-6">
+                    <div class="media">
+                        <a class="thumbnail pull-left" href="#"> <img class="media-object" src="http://icons.iconarchive.com/icons/custom-icon-design/flatastic-2/72/product-icon.png" style="width: 72px; height: 72px;"> </a>
+                        <div class="media-body">
+                            <h3 class="media-heading">{{this.item.name}}</h3>
+                        </div>
+                    </div></td>
+                    <td class="col-sm-1 col-md-1" style="text-align: center">
+                        <h3><span class="label label-success ">{{this.qty}}</span></h3>
+                    </td>
+                    <td class="col-sm-1 col-md-1 text-center"><h3><strong>{{this.price}}</strong></h3></td>
+                    <td class="col-sm-1 col-md-1">
+                    <a type="button" class="btn btn-danger" href="/users/remove/{{this.item._id}}">
+                        <span class="glyphicon glyphicon-remove"></span> Remove
+                    </a>
+                    <a type="button" class="btn btn-danger" href="/users/reduce/{{this.item._id}}">
+                        <span class="glyphicon glyphicon-remove"></span> Reduce by 1
+                    </a>
+                    </td>
+                </tr>
+                {{/each}}
+                <tr>
+                    <td>   </td>
+                    <td>   </td>
+                    <td><h3>Total Quantity</h3></td>
+                    <td class="text-right"><h3><strong>{{totalQty}}</strong></h3></td>
+                </tr>
+                <tr>
+                    <td>   </td>
+                    <td>   </td>
+                    <td><h3>Total</h3></td>
+                    <td class="text-right"><h3><strong>{{totalPrice}}</strong></h3></td>
+                </tr>
+                <tr>
+                    <td>   </td>
+                    <td>   </td>
+                    <td>
+                    <a type="button" class="btn btn-default" href="/users/home">
+                        <span class="glyphicon glyphicon-shopping-cart"></span>Continue Shopping
+                    </a></td>
+                    <td>
+                    <form method="POST" action="/users/pay"> 
+                    <button type="submit" class="btn btn-success" href="#">
+                        Checkout <span class="glyphicon glyphicon-play"></span>
+                    </button></form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{{else}}
+<div class="row">
+    <div class="col-sm-12 col-md-12 ">
+        <div class="panel panel-danger">
+        <div class="panel-heading">NO ITEMS IN CART </div>
+        <div class="panel-body">Visit the home page to buy items </div>
+    </div>
+    <a type="button" class="btn btn-default" href="/users/home">
+                        <span class="glyphicon glyphicon-shopping-cart"></span>Continue Shopping</a>
+</div>
+{{/if}}
+<div>
+{{#if expressFlash}}
+    {{#each expressFlash}}
+    <div class="alert alert-{{type}}">
+        <p><strong>message</strong> {{message}}</p>
+    </div>
+    {{/each}}
+{{/if}}'
+</div>
+

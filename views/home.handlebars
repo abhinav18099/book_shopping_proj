@@ -7,23 +7,27 @@
         </div>
     </form>
 </div>
-
-<nav class="navbar navbar-inverse">
-    {{#if email}}
+<div class="container-fluid">
+    <nav class="navbar navbar-inverse">
+        {{#if email}}
+            <ul class="nav navbar-nav">
+                <li><a href="/users/home">HOME</a></li>
+                <li><a href="/users/profile">PROFILE</a></li>
+                <li><a href="/users/sell">SELL BOOKS</a></li> 
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/users/shopping-cart"><span class="glyphicon glyphicon-shopping-cart"></span>Shopping Cart
+                <span class="badge">{{session.cart.totalQty}}</span></a></li>
+            </ul>
+            <form method="POST" action="/users/logout"><button class="btn btn-danger navbar-btn">LOGOUT</button></form>
+        {{else}}
         <ul class="nav navbar-nav">
-            <li><a href="/users/home">HOME</a></li>
-            <li><a href="/users/profile">PROFILE</a></li>
-             <li><a href="/users/sell">SELL BOOKS</a></li>
+        <li><a href="/users/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+        <li><a href="/users/signin"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
         </ul>
-        <form method="POST" action="/users/logout"><button class="btn btn-danger navbar-btn">LOGOUT</button></form>
-    {{else}}
-    <ul class="nav navbar-nav">
-      <li><a href="/users/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-      <li><a href="/users/signin"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-    </ul>
-    {{/if}}
-</nav>
-
+        {{/if}}
+    </nav>
+</div>
 {{#result}}
 <div class="col-sm-4 col-xs-12">
     <div class="card">
@@ -31,7 +35,7 @@
     <h3>{{name}}</h3>
     <p class="price">Rupee : {{SellingPrice}}</p>
     <p><a href='/users/more-info/{{_id}}'>MORE INFO</a></p>
-    <p><button>Add to Cart</button></p>
+    <p><a href='/users/add-to-cart/{{_id}}'>ADD TO CART</a></p>
     </div> 
 </div>
 {{/result}}
